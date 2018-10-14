@@ -105,15 +105,16 @@
 	    function pageLoad(){
 	    	database.ref().once("value", function(snapshot) {
 	    		peopleArr = people = snapshot.val().people;
+	    		$('body').show();
 	    	})
-
-	    	$('body').show();
 	    }
 
 	    function initialDraw(){
 	    	$('#click-button').hide();
 
 		    personVal = Math.floor(Math.random() * people.length);
+		    console.log('L: ', people.length)
+		    console.log('V: ',personVal)
 		    person    = people[personVal];
 
 		    $("#click-value").html('<h4>Your gift recipient is <span>' + person + '</span></h4>');
