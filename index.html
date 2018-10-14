@@ -113,8 +113,6 @@
 	    	$('#click-button').hide();
 
 		    personVal = Math.floor(Math.random() * people.length);
-		    console.log('L: ', people.length)
-		    console.log('V: ',personVal)
 		    person    = people[personVal];
 
 		    $("#click-value").html('<h4>Your gift recipient is <span>' + person + '</span></h4>');
@@ -124,16 +122,12 @@
 		    } else {
 		    	finish();
 		    }
-
-
-		    console.log(people)
 	    }
 
 	    function redraw(){
 	        people = people.filter(prsn=>{
 				return prsn != person;
 	        })
-
 	        initialDraw();
 	    }
 
@@ -144,11 +138,9 @@
 				return prsn != person;
 	        })
 
-	        console.log('finished', people);
-	        //uncomment this once finished.
-	    	// database.ref().set({
-	    	//   people: people
-	    	// });
+	    	database.ref().set({
+	    	  people: people
+	    	});
 	    }
 
 	    // Initial draw
