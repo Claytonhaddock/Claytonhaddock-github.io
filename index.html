@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <title>White Elephant</title>
+
+    <!-- Firebase JavaScript Link -->
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
+  </head>
+  <style>
+	body {
+		text-align: center;
+	}
+
+	h4 {
+		color: #1dd1a1;
+	}
+
+	h4 span {
+		color: tomato;
+		font-size: 40px;
+	}
+
+	#click-value {
+		color: #48dbfb;
+	}
+
+  	.redo-buttons {
+  		width: 140px;
+  		height: 60px;
+  		font-size: 20px;
+  		color: white;
+  	}
+
+  	#click-button {
+  		background-color: #ee5253;
+  		color: white;
+  	}
+
+  	#redo-button-yes {
+		background-color: tomato;
+  	}
+
+  	#redo-button-no {
+		background-color: #48dbfb;
+  	}
+
+  	#redo-div {
+  		display: flex;
+  		flex-direction: column;
+  		justify-content: center;
+  		align-items: center;
+  	}
+  </style>
+
+  <body>
+
+    <!-- Text with spanID that gets filled with content -->
+    <h1 id="click-value">Click the button to find out who you'll be giving a gift</h1>
+
+    <!-- Button -->
+    <button class="redo-buttons" id="click-button">Click Me!</button>
+    <div id="redo-div">
+    	<h4>Did you get yourself or your S/O?</h4>
+    	<div>
+    		<button class="redo-buttons" id="redo-button-yes">Yes</button>
+    		<button class="redo-buttons" id="redo-button-no">No</button>
+    	</div>
+    </div>
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- ================================================================================== -->
+
+    <script>
+    	$('body').hide();
+    	$(document).ready(pageLoad);
+
+    	$('#redo-div').hide();
+
+	    var config = {
+	      apiKey: "AIzaSyAa0uK47aU0pqUDbKdczMpdX5cvyVSi0ZY",
+	      authDomain: "giftgiver-ec0b7.firebaseapp.com",
+	      databaseURL: "https://giftgiver-ec0b7.firebaseio.com",
+	      projectId: "giftgiver-ec0b7",
+	      storageBucket: "giftgiver-ec0b7.appspot.com",
+	      messagingSenderId: "824459411231"
+	    };
+	    firebase.initializeApp(config);
+
+	    // Get a reference to the database service
+	    var database = firebase.database();
+
+
+	    let people;
+	    let person;
+	    let peopleArr;
+	    let personVal;
+	    // FUNCTIONS + EVENTS
+	    // --------------------------------------------------------------------------------
+	    function pageLoad(){
+	    	database.ref().once("value", function(snapshot) {
+	    		peopleArr = people = snapshot.val().people;
+	    	})
+
+	    	$('body').show();
+	    }
+
+	    function initialDraw(){
+	    	$('#click-button').hide();
+
+		    personVal = Math.floor(Math.random() * people.length);
+		    person    = people[personVal];
+
+		    $("#click-value").html('<h4>Your gift recipient is <span>' + person + '</span></h4>');
+
+		    if(people.length > 1){
+				$('#redo-div').show();		    	
+		    } else {
+		    	finish();
+		    }
+
+
+		    console.log(people)
+	    }
+
+	    function redraw(){
+	        people = people.filter(prsn=>{
+				return prsn != person;
+	        })
+
+	        initialDraw();
+	    }
+
+	    function finish(){
+	    	$('#redo-div').hide();
+
+	        people = peopleArr.filter(prsn=>{
+				return prsn != person;
+	        })
+
+	        console.log('finished', people);
+	        //uncomment this once finished.
+	    	// database.ref().set({
+	    	//   people: people
+	    	// });
+	    }
+
+	    // Initial draw
+	    $("#click-button").on("click", initialDraw);
+
+	    //Redo random draw
+	    $("#redo-button-yes").on("click", redraw);
+
+	    //Complete random draw
+	    $("#redo-button-no").on("click", finish);
+    </script>
+  </body>
+</html>
